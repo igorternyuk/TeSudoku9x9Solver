@@ -1,10 +1,8 @@
 #include <iostream>
-#include <cmath>
 #include <fstream>
 #include <sstream>
-#include <algorithm>
 
-enum {_ = -1, DIM = 9};
+enum {EMPTY = -1, DIM = 9};
 
 const int inner_square_size = 3;
 
@@ -30,14 +28,14 @@ bool check(const Puzzle &puzzle)
             for(int k{j + 1}; k < DIM; ++k)
             {
                 //Check for duplicates at all the horizontal lines
-                if(puzzle.data[i][j] != _ && puzzle.data[i][j] == puzzle.data[i][k])
+                if(puzzle.data[i][j] != EMPTY && puzzle.data[i][j] == puzzle.data[i][k])
                     return false;
                 //Check for duplicates at all the vertical lines
-                if(puzzle.data[j][i] != _ && puzzle.data[j][i] == puzzle.data[k][i])
+                if(puzzle.data[j][i] != EMPTY && puzzle.data[j][i] == puzzle.data[k][i])
                     return false;
                 int x_k = k % inner_square_size + dx;
                 int y_k = k / inner_square_size + dy;
-                if(puzzle.data[x][y] != _ &&
+                if(puzzle.data[x][y] != EMPTY &&
                    puzzle.data[x][y] == puzzle.data[x_k][y_k])
                     return false;
             }
@@ -53,7 +51,7 @@ bool find_empty_cell(int &x, int &y)
     for(int i{0}; i < DIM; ++i)
         for(int j{0}; j < DIM; ++j)
         {
-            if(puzzle.data[i][j] == _)
+            if(puzzle.data[i][j] == EMPTY)
             {
                 hasEmptyCells = true;
                 int counter = 0;
@@ -62,7 +60,7 @@ bool find_empty_cell(int &x, int &y)
                     puzzle.data[i][j] = k;
                     if(check(puzzle))
                         ++counter;
-                    puzzle.data[i][j] = _;
+                    puzzle.data[i][j] = EMPTY;
                 }
                 if(min > counter)
                 {
@@ -91,7 +89,7 @@ bool solve(Puzzle &puzzle)
             if(solve(puzzle))
                 return true;
     }
-    puzzle.data[y][x] = _;
+    puzzle.data[y][x] = EMPTY;
     return false;
 }
 
@@ -134,7 +132,7 @@ int main(int argc, char *argv[])
             {
                 std::string line;
                 std::getline(fi, line, ',');
-                puzzle.data[i][j] = (line == "_" || line == "\n_") ? _ : std::atoi(line.c_str());
+                puzzle.data[i][j] = (line == "_" || line == "\n_") ? EMPTY : std::atoi(line.c_str());
             }
         }
         fi.close();
